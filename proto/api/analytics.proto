@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package analytics;
+
+option go_package = "gen/api";
+
+import "google/protobuf/timestamp.proto";
+
+service AnalyticsData {
+  rpc FetchItemsData (TaskDoneItem) returns (ServiceResponse);
+
+}
+
+message TaskDoneItem {
+  string user_id = 1;
+  string email = 2;
+  int32 item_id = 3;
+  string description = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message ServiceResponse {
+  string message = 1;
+}
