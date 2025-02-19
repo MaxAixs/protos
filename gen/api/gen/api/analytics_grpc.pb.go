@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: api/analytics.proto
+// source: analytics.proto
 
 package api
 
@@ -117,5 +117,5 @@ var AnalyticsData_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/analytics.proto",
+	Metadata: "analytics.proto",
 }
