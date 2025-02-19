@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AnalyticsDataClient interface {
-	FetchItemsData(ctx context.Context, in *TaskDoneItem, opts ...grpc.CallOption) (*ServiceResponse, error)
+	FetchItemsData(ctx context.Context, in *TaskDoneItems, opts ...grpc.CallOption) (*ServiceResponse, error)
 }
 
 type analyticsDataClient struct {
@@ -37,7 +37,7 @@ func NewAnalyticsDataClient(cc grpc.ClientConnInterface) AnalyticsDataClient {
 	return &analyticsDataClient{cc}
 }
 
-func (c *analyticsDataClient) FetchItemsData(ctx context.Context, in *TaskDoneItem, opts ...grpc.CallOption) (*ServiceResponse, error) {
+func (c *analyticsDataClient) FetchItemsData(ctx context.Context, in *TaskDoneItems, opts ...grpc.CallOption) (*ServiceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ServiceResponse)
 	err := c.cc.Invoke(ctx, AnalyticsData_FetchItemsData_FullMethodName, in, out, cOpts...)
@@ -51,7 +51,7 @@ func (c *analyticsDataClient) FetchItemsData(ctx context.Context, in *TaskDoneIt
 // All implementations must embed UnimplementedAnalyticsDataServer
 // for forward compatibility.
 type AnalyticsDataServer interface {
-	FetchItemsData(context.Context, *TaskDoneItem) (*ServiceResponse, error)
+	FetchItemsData(context.Context, *TaskDoneItems) (*ServiceResponse, error)
 	mustEmbedUnimplementedAnalyticsDataServer()
 }
 
@@ -62,7 +62,7 @@ type AnalyticsDataServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAnalyticsDataServer struct{}
 
-func (UnimplementedAnalyticsDataServer) FetchItemsData(context.Context, *TaskDoneItem) (*ServiceResponse, error) {
+func (UnimplementedAnalyticsDataServer) FetchItemsData(context.Context, *TaskDoneItems) (*ServiceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FetchItemsData not implemented")
 }
 func (UnimplementedAnalyticsDataServer) mustEmbedUnimplementedAnalyticsDataServer() {}
@@ -87,7 +87,7 @@ func RegisterAnalyticsDataServer(s grpc.ServiceRegistrar, srv AnalyticsDataServe
 }
 
 func _AnalyticsData_FetchItemsData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TaskDoneItem)
+	in := new(TaskDoneItems)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func _AnalyticsData_FetchItemsData_Handler(srv interface{}, ctx context.Context,
 		FullMethod: AnalyticsData_FetchItemsData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AnalyticsDataServer).FetchItemsData(ctx, req.(*TaskDoneItem))
+		return srv.(AnalyticsDataServer).FetchItemsData(ctx, req.(*TaskDoneItems))
 	}
 	return interceptor(ctx, in, info, handler)
 }
