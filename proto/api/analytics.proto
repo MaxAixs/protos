@@ -5,10 +5,12 @@ package analytics;
 option go_package = "gen/api";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
 
 service AnalyticsData {
   rpc FetchItemsData (TaskDoneItems) returns (ServiceResponse);
-
+  rpc FetchWeeklyCompletedTask(google.protobuf.Empty) returns (WeeklyCompletedTasksResponse);
 }
 
 message TaskDoneItem {
@@ -24,4 +26,15 @@ message TaskDoneItems {
 
 message ServiceResponse {
   string message = 1;
+}
+
+message CompletedTask {
+  string user_id = 1;
+  string email = 2;
+  int32 item_id = 3;
+  int32 count = 4;
+}
+
+message WeeklyCompletedTasksResponse {
+  repeated CompletedTask tasks = 1;
 }
