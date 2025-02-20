@@ -9,7 +9,7 @@ import "google/protobuf/empty.proto";
 
 
 service AnalyticsData {
-  rpc FetchItemsData (TaskDoneItems) returns (ServiceResponse);
+  rpc SaveDoneTasks (TaskDoneItems) returns (ServiceResponse);
   rpc FetchWeeklyCompletedTask(google.protobuf.Empty) returns (WeeklyCompletedTasksResponse);
 }
 

@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,14 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AnalyticsData_FetchItemsData_FullMethodName = "/analytics.AnalyticsData/FetchItemsData"
+	AnalyticsData_SaveDoneTasks_FullMethodName            = "/analytics.AnalyticsData/SaveDoneTasks"
+	AnalyticsData_FetchWeeklyCompletedTask_FullMethodName = "/analytics.AnalyticsData/FetchWeeklyCompletedTask"
 )
 
 // AnalyticsDataClient is the client API for AnalyticsData service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AnalyticsDataClient interface {
-	FetchItemsData(ctx context.Context, in *TaskDoneItems, opts ...grpc.CallOption) (*ServiceResponse, error)
+	SaveDoneTasks(ctx context.Context, in *TaskDoneItems, opts ...grpc.CallOption) (*ServiceResponse, error)
+	FetchWeeklyCompletedTask(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*WeeklyCompletedTasksResponse, error)
 }
 
 type analyticsDataClient struct {
@@ -37,10 +40,20 @@ func NewAnalyticsDataClient(cc grpc.ClientConnInterface) AnalyticsDataClient {
 	return &analyticsDataClient{cc}
 }
 
-func (c *analyticsDataClient) FetchItemsData(ctx context.Context, in *TaskDoneItems, opts ...grpc.CallOption) (*ServiceResponse, error) {
+func (c *analyticsDataClient) SaveDoneTasks(ctx context.Context, in *TaskDoneItems, opts ...grpc.CallOption) (*ServiceResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ServiceResponse)
-	err := c.cc.Invoke(ctx, AnalyticsData_FetchItemsData_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AnalyticsData_SaveDoneTasks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *analyticsDataClient) FetchWeeklyCompletedTask(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*WeeklyCompletedTasksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WeeklyCompletedTasksResponse)
+	err := c.cc.Invoke(ctx, AnalyticsData_FetchWeeklyCompletedTask_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +64,8 @@ func (c *analyticsDataClient) FetchItemsData(ctx context.Context, in *TaskDoneIt
 // All implementations must embed UnimplementedAnalyticsDataServer
 // for forward compatibility.
 type AnalyticsDataServer interface {
-	FetchItemsData(context.Context, *TaskDoneItems) (*ServiceResponse, error)
+	SaveDoneTasks(context.Context, *TaskDoneItems) (*ServiceResponse, error)
+	FetchWeeklyCompletedTask(context.Context, *emptypb.Empty) (*WeeklyCompletedTasksResponse, error)
 	mustEmbedUnimplementedAnalyticsDataServer()
 }
 
@@ -62,8 +76,11 @@ type AnalyticsDataServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAnalyticsDataServer struct{}
 
-func (UnimplementedAnalyticsDataServer) FetchItemsData(context.Context, *TaskDoneItems) (*ServiceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FetchItemsData not implemented")
+func (UnimplementedAnalyticsDataServer) SaveDoneTasks(context.Context, *TaskDoneItems) (*ServiceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveDoneTasks not implemented")
+}
+func (UnimplementedAnalyticsDataServer) FetchWeeklyCompletedTask(context.Context, *emptypb.Empty) (*WeeklyCompletedTasksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FetchWeeklyCompletedTask not implemented")
 }
 func (UnimplementedAnalyticsDataServer) mustEmbedUnimplementedAnalyticsDataServer() {}
 func (UnimplementedAnalyticsDataServer) testEmbeddedByValue()                       {}
@@ -86,20 +103,38 @@ func RegisterAnalyticsDataServer(s grpc.ServiceRegistrar, srv AnalyticsDataServe
 	s.RegisterService(&AnalyticsData_ServiceDesc, srv)
 }
 
-func _AnalyticsData_FetchItemsData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AnalyticsData_SaveDoneTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TaskDoneItems)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AnalyticsDataServer).FetchItemsData(ctx, in)
+		return srv.(AnalyticsDataServer).SaveDoneTasks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AnalyticsData_FetchItemsData_FullMethodName,
+		FullMethod: AnalyticsData_SaveDoneTasks_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AnalyticsDataServer).FetchItemsData(ctx, req.(*TaskDoneItems))
+		return srv.(AnalyticsDataServer).SaveDoneTasks(ctx, req.(*TaskDoneItems))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AnalyticsData_FetchWeeklyCompletedTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AnalyticsDataServer).FetchWeeklyCompletedTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AnalyticsData_FetchWeeklyCompletedTask_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AnalyticsDataServer).FetchWeeklyCompletedTask(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +147,12 @@ var AnalyticsData_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AnalyticsDataServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "FetchItemsData",
-			Handler:    _AnalyticsData_FetchItemsData_Handler,
+			MethodName: "SaveDoneTasks",
+			Handler:    _AnalyticsData_SaveDoneTasks_Handler,
+		},
+		{
+			MethodName: "FetchWeeklyCompletedTask",
+			Handler:    _AnalyticsData_FetchWeeklyCompletedTask_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
